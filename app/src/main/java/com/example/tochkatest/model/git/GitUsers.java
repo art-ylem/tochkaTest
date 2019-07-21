@@ -59,6 +59,9 @@ public class GitUsers {
     @SerializedName("site_admin")
     @Expose
     private boolean siteAdmin;
+    @SerializedName("score")
+    @Expose
+    private double score;
 
     public String getLogin() {
         return login;
@@ -202,6 +205,13 @@ public class GitUsers {
 
     public void setSiteAdmin(boolean siteAdmin) {
         this.siteAdmin = siteAdmin;
+    }
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
     }
 
 }

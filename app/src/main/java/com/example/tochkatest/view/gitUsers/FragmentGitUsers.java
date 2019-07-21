@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.example.tochkatest.R;
 import com.example.tochkatest.model.git.GitUsers;
+import com.example.tochkatest.model.git.InputData;
 import com.example.tochkatest.presenter.FragmentGitUsersPresenter;
 
 import java.util.ArrayList;
@@ -48,7 +49,6 @@ public class FragmentGitUsers extends Fragment implements FragmentGitUsersView {
     public static FragmentGitUsers newInstance() {
         FragmentGitUsers fragment = new FragmentGitUsers();
         return fragment;
-
     }
 
     @Override
@@ -67,8 +67,6 @@ public class FragmentGitUsers extends Fragment implements FragmentGitUsersView {
         recyclerView.setAdapter(recyclerViewGitUsersAdapter);
         fragmentGitUsersPresenter = new FragmentGitUsersPresenter(this);
         fragmentGitUsersPresenter.loadData("0");
-
-
 
         searchView = view.findViewById(R.id.searchView);
         notFound = view.findViewById(R.id.notFoundResults);
@@ -101,10 +99,16 @@ public class FragmentGitUsers extends Fragment implements FragmentGitUsersView {
         Log.e("TAG", "recyclerUsers: " );
         arrayList.addAll(arr);
 
-
         recyclerViewGitUsersAdapter.updateList(arrayList);
+    }
 
+    @Override
+    public void recyclerInputUsers(ArrayList<GitUsers> arr) {
+        Log.e("TAG", "recyclerInputUsers: " );
+        ArrayList<GitUsers> arrList = new ArrayList<>();
+        arrList.addAll(arr);
 
+        recyclerViewGitUsersAdapter.updateList(arrList);
     }
 
     private void initAdapter(){
@@ -131,23 +135,26 @@ public class FragmentGitUsers extends Fragment implements FragmentGitUsersView {
                 .observeOn(AndroidSchedulers.mainThread())
                 .debounce(600, TimeUnit.MILLISECONDS)
                 .doOnNext(text ->{
+                    if(!TextUtils.isEmpty(text) && text != " ") fragmentGitUsersPresenter.loadSearchData(text.toLowerCase());
 
-                    String userInput = text.toLowerCase();
-                    ArrayList<GitUsers> newFilteredList = new ArrayList<>();
-                    for(GitUsers contact : arrayList){
-                        if(contact.getLogin().toLowerCase().startsWith(userInput)) newFilteredList.add(contact);
-                    }
-                    if(TextUtils.isEmpty(userInput)) {
-                        recyclerViewGitUsersAdapter.updateList(arrayList);
-                        notFound.setVisibility(View.GONE);
 
-                    } else if(newFilteredList.size() == 0) {
-                        recyclerViewGitUsersAdapter.updateList(newFilteredList);
-                        notFound.setVisibility(View.VISIBLE);
-                    } else{
-                        recyclerViewGitUsersAdapter.updateList(newFilteredList);
-                        notFound.setVisibility(View.GONE);
-                    }
+
+//                    String userInput = text.toLowerCase();
+//                    ArrayList<GitUsers> newFilteredList = new ArrayList<>();
+//                    for(GitUsers contact : arrayList){
+//                        if(contact.getLogin().toLowerCase().startsWith(userInput)) newFilteredList.add(contact);
+//                    }
+//                    if(TextUtils.isEmpty(userInput)) {
+//                        recyclerViewGitUsersAdapter.updateList(arrayList);
+//                        notFound.setVisibility(View.GONE);
+//
+//                    } else if(newFilteredList.size() == 0) {
+//                        recyclerViewGitUsersAdapter.updateList(newFilteredList);
+//                        notFound.setVisibility(View.VISIBLE);
+//                    } else{
+//                        recyclerViewGitUsersAdapter.updateList(newFilteredList);
+//                        notFound.setVisibility(View.GONE);
+//                    }
                 })
                 .subscribe();
 

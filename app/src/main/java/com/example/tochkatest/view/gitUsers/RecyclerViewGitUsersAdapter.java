@@ -58,7 +58,7 @@ public class RecyclerViewGitUsersAdapter extends RecyclerView.Adapter<RecyclerVi
             }
         });
 
-        if (position == rData.size()-1) {
+        if (position > 20 && position == rData.size()-1) {
 
             Log.e("TAG", "limit 30: " );
 
