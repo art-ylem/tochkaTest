@@ -6,17 +6,10 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 data class Profile(
-    val response: List<Response>
+    val response: ArrayList<Response>
 )
 
-data class Response(
-    val can_access_closed: Boolean,
-    val first_name: String,
-    val id: Int,
-    val is_closed: Boolean,
-    val last_name: String,
-    val photo_200: String
-)
+
 
 
 

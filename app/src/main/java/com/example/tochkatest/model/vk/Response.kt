@@ -10,4 +10,4 @@ data class Response(
         val is_closed: Boolean,
         val last_name: String,
         val photo_200: String
-        )
+)
