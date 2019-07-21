@@ -1,7 +1,9 @@
 package com.example.tochkatest;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -10,17 +12,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
-public class GoogleActivityPresenter {
+public class GoogleUseCase {
 
 
-    //google
+    private User user;
     final int RC_SIGN_IN = 0;
     private GoogleSignInClient mGoogleSignInClient;
     GoogleSignInOptions gso;
+    private MainActivity mainActivity;
+    private GoogleSignInAccount acct;
 
+    public GoogleUseCase(MainActivity mainActivity) {
 
-    public GoogleActivityPresenter(MainActivity mainActivity) {
-
+        this.mainActivity = mainActivity;
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -40,7 +44,9 @@ public class GoogleActivityPresenter {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             // Signed in successfully, show authenticated UI.
-            mainActivity.startActivity(new Intent(mainActivity, StartGoogleActivity.class));
+            acct = GoogleSignIn.getLastSignedInAccount(mainActivity);
+            user = new User(acct.getGivenName() + " " + acct.getFamilyName(), acct.getPhotoUrl().toString());
+            mainActivity.startActivity(new Intent(mainActivity, StartActivity.class).putExtra("USER", user));
 
 
         } catch (ApiException e) {
@@ -49,5 +55,17 @@ public class GoogleActivityPresenter {
             Log.e("TAG", "signInResult:failed code=" + e.getStatusCode());
         }
     }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task,mainActivity);
+        }
+    }
+
+
+
 
 }

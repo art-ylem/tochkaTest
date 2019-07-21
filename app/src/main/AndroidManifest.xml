@@ -15,8 +15,6 @@
         android:theme="@style/AppTheme"
         >
         <activity android:name=".StartActivity"></activity>
-        <activity android:name=".StartGoogleActivity"></activity>
-        <activity android:name=".StartFBActivity"></activity>
 
 
         <activity android:name=".MainActivity">

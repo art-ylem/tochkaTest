@@ -8,11 +8,16 @@ import com.facebook.CallbackManager;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class FacebookActivityPresenter {
+public class FacebookUseCase {
+
+    private User user;
 
     public CallbackManager callbackManager;
     AccessToken accessToken;
@@ -22,7 +27,7 @@ public class FacebookActivityPresenter {
         return callbackManager;
     }
 
-    public FacebookActivityPresenter(MainActivity mainActivity) {
+    public FacebookUseCase(MainActivity mainActivity) {
         callbackManager = CallbackManager.Factory.create();
         this.mainActivity = mainActivity;
 
@@ -41,13 +46,10 @@ public class FacebookActivityPresenter {
             public void onCompleted(JSONObject object, GraphResponse response) {
                 try {
 
+                    user = new User(object.getString("name"),
+                            object.getJSONObject("picture").getJSONObject("data").getString("url"));
 
-                    String nameFB = object.getString("name");
-                    String imageFB = object.getJSONObject("picture").getJSONObject("data").getString("url");
-
-                    Intent intent = new Intent(mainActivity, StartFBActivity.class);
-                    intent.putExtra("nameFB",nameFB);
-                    intent.putExtra("imageFB",imageFB);
+                    Intent intent = new Intent(mainActivity, StartActivity.class).putExtra("USER", user);
                     mainActivity.startActivity(intent);
 
 
@@ -62,6 +64,10 @@ public class FacebookActivityPresenter {
         request.setParameters(parameters);
         // Initiate the GraphRequest
         request.executeAsync();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        getCallbackManager().onActivityResult(requestCode, resultCode, data);
     }
 
 }

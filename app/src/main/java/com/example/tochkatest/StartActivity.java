@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.tochkatest.model.vk.Profile;
@@ -21,69 +22,63 @@ import com.example.tochkatest.view.gitUsers.FragmentGitUsers;
 import com.example.tochkatest.view.vkProfile.VkProfileView;
 import com.google.android.material.navigation.NavigationView;
 import com.squareup.picasso.Picasso;
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
+import com.vk.sdk.api.VKError;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class StartActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, VkProfileView {
+public class StartActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    public static final String[] DEFAULT_LOGIN_SCOPE = {VKScope.WALL, VKScope.PHOTOS};
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
     private TextView name;
     private CircleImageView img;
-    private Profile profile;
-    private VkProfilePresenter vkProfilePresenter;
+    private User user;
 
-    @Override
-    public void contactInfo(Profile obj) {
-        profile = obj;
-        name = findViewById(R.id.account_name);
-        img = findViewById(R.id.account_img);
-        name.setText(profile.getResponse().get(0).getFirstName() + " " + profile.getResponse().get(0).getLastName());
-        Picasso.with(this).load(profile.getResponse().get(0).getPhoto200()).into(img);
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        checkAuth();
+        init();
+        user = (User) getIntent().getSerializableExtra("USER");
+        name.setText(user.getName());
+        Picasso.with(this).load(user.getUrl()).into(img);
     }
 
-    public void checkAuth() {
-        if (!CurrentUser.isAuthorized()) {
-            VKSdk.login(this, DEFAULT_LOGIN_SCOPE);
-        } else {
-            vkProfilePresenter = new VkProfilePresenter(this);
-            vkProfilePresenter.loadData();
+    private void init(){
 
-            toolbar = findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            drawerLayout = findViewById(R.id.drawer_layout);
-            toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
-                    R.string.nav_open_drawer,
-                    R.string.nav_close_drawer
-            );
-            drawerLayout.addDrawerListener(toggle);
-            toggle.syncState();
-            navigationView = findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-            launchFragment(FragmentGitUsers.newInstance());
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        }
+        drawerLayout = findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.nav_open_drawer,
+                R.string.nav_close_drawer
+        );
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+        name = headerView.findViewById(R.id.account_name);
+        img = headerView.findViewById(R.id.account_img);
+
+        launchFragment(FragmentGitUsers.newInstance());
+
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        switch(item.getItemId())
-        {
+        switch(item.getItemId()){
             case R.id.changeAccount:
                 startActivity(new Intent(StartActivity.this, MainActivity.class));
                 break;
@@ -94,10 +89,8 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
             default:
                 return true;
         }
-
         drawerLayout.closeDrawer(GravityCompat.START);
         return false;
-
     }
 
     @Override
@@ -105,7 +98,6 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
         if(drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
         } else super.onBackPressed();
-
     }
 
     public void launchFragment(Fragment fragment){
@@ -116,6 +108,4 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
 
     }
 
-
-//
 }

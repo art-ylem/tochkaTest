@@ -5,6 +5,10 @@ import com.vk.sdk.VKSdk;
 
 public class CurrentUser {
 
+    private String token;
+    private String name;
+    private String url;
+
     public static String getAccessToken() {
         if (VKAccessToken.currentToken() == null) {
             return null;
