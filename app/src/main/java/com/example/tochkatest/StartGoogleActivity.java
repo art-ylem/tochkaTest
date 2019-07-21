@@ -1,5 +1,6 @@
 package com.example.tochkatest;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -51,8 +52,7 @@ public class StartGoogleActivity extends AppCompatActivity implements Navigation
 
 
         init();
-
-
+        launchFragment(FragmentGitUsers.newInstance());
 
     }
 
@@ -95,6 +95,7 @@ public class StartGoogleActivity extends AppCompatActivity implements Navigation
 
         name.setText(personGivenName + " " + personFamilyName);
         Picasso.with(this).load(personPhoto).into(img);
+
     }
 
 
@@ -104,10 +105,11 @@ public class StartGoogleActivity extends AppCompatActivity implements Navigation
         switch(item.getItemId())
         {
             case R.id.changeAccount:
+                startActivity(new Intent(StartGoogleActivity.this, MainActivity.class));
                 signOut();
                 break;
             case R.id.list_git_users:
-                launchFragmentWitchBackStack(FragmentGitUsers.newInstance());
+                launchFragment(FragmentGitUsers.newInstance());
                 break;
 
             default:
@@ -127,11 +129,10 @@ public class StartGoogleActivity extends AppCompatActivity implements Navigation
 
     }
 
-    public void launchFragmentWitchBackStack(Fragment fragment){
+    public void launchFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container_frame, fragment);
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
     }

@@ -1,5 +1,6 @@
 package com.example.tochkatest;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -73,6 +74,8 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
             toggle.syncState();
             navigationView = findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
+            launchFragment(FragmentGitUsers.newInstance());
+
         }
     }
 
@@ -82,10 +85,10 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
         switch(item.getItemId())
         {
             case R.id.changeAccount:
-
+                startActivity(new Intent(StartActivity.this, MainActivity.class));
                 break;
             case R.id.list_git_users:
-                launchFragmentWitchBackStack(FragmentGitUsers.newInstance());
+                launchFragment(FragmentGitUsers.newInstance());
                 break;
 
             default:
@@ -105,11 +108,10 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
 
     }
 
-    public void launchFragmentWitchBackStack(Fragment fragment){
+    public void launchFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container_frame, fragment);
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
     }

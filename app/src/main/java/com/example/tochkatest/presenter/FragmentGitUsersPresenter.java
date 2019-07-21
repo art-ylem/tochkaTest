@@ -13,7 +13,7 @@ import io.reactivex.schedulers.Schedulers;
 public class FragmentGitUsersPresenter {
 
     private FragmentGitUsersView fragmentGitUsersView;
-    private ArrayList<GitUsers> arrayList = new ArrayList<>();
+//    private ArrayList<GitUsers> arrayList = new ArrayList<>();
 
     public FragmentGitUsersPresenter(FragmentGitUsersView fragmentGitUsersView) {
         this.fragmentGitUsersView = fragmentGitUsersView;
@@ -31,8 +31,8 @@ public class FragmentGitUsersPresenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext( ee -> {
-                    arrayList.addAll(ee);
-                    fragmentGitUsersView.recyclerUsers(arrayList);})
+//                    arrayList.addAll(ee);
+                    fragmentGitUsersView.recyclerUsers(ee);})
             .subscribe();
     }
 

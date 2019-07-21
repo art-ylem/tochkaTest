@@ -20,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
@@ -30,12 +31,13 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    private GoogleActivityPresenter googleActivityPresenter = new GoogleActivityPresenter(this);
+    private FacebookActivityPresenter facebookActivityPresenter = new FacebookActivityPresenter(this);
     //google
     final int RC_SIGN_IN = 0;
-    private GoogleSignInClient mGoogleSignInClient;
 
-    //fb
-    private CallbackManager callbackManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,27 +45,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //vk
-        ImageButton vkImg = findViewById(R.id.vk);
+        Button vkImg = findViewById(R.id.vk);
         vkImg.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, StartActivity.class)));
 
         //google
-        ImageButton googleImg = findViewById(R.id.gl);
-        googleImg.setOnClickListener(v -> signIn());
+        SignInButton googleImg = findViewById(R.id.gl);
+        googleImg.setOnClickListener(v -> googleActivityPresenter.signIn(this));
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
 
 
         //fb
         LoginButton fbBtn = findViewById(R.id.fb);
 
         fbBtn.setReadPermissions(Arrays.asList( "public_profile"));
-        // Creating CallbackManager
-        callbackManager = CallbackManager.Factory.create();
         // Registering CallbackManager with the LoginButton
-        fbBtn.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        fbBtn.registerCallback(facebookActivityPresenter.getCallbackManager(), new FacebookCallback<LoginResult>() {
 //            AccessToken accessToken = AccessToken.getCurrentAccessToken();
 //                if (accessToken != null) {
 //                useLoginInformation(accessToken);
@@ -71,8 +68,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // Retrieving access token using the LoginResult
-                AccessToken accessToken = loginResult.getAccessToken();
-                useLoginInformation(accessToken);
+                facebookActivityPresenter.useLoginInformation(loginResult);
 
             }
             @Override
@@ -93,11 +89,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //google
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -108,64 +100,17 @@ public class MainActivity extends AppCompatActivity {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            googleActivityPresenter.handleSignInResult(task,this);
         } else{
             //fb
-            callbackManager.onActivityResult(requestCode, resultCode, data);
+            facebookActivityPresenter.getCallbackManager().onActivityResult(requestCode, resultCode, data);
         }
     }
 
     //google
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            // Signed in successfully, show authenticated UI.
-            startActivity(new Intent(MainActivity.this, StartGoogleActivity.class));
-
-
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.e("TAG", "signInResult:failed code=" + e.getStatusCode());
-        }
-    }
 
     //fb
-    private void useLoginInformation(AccessToken accessToken) {
-        /**
-         Creating the GraphRequest to fetch user details
-         1st Param - AccessToken
-         2nd Param - Callback (which will be invoked once the request is successful)
-         **/
-        GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
-            //OnCompleted is invoked once the GraphRequest is successful
-            @Override
-            public void onCompleted(JSONObject object, GraphResponse response) {
-                try {
-
-
-                    String nameFB = object.getString("name");
-                    String imageFB = object.getJSONObject("picture").getJSONObject("data").getString("url");
-
-                    Intent intent = new Intent(MainActivity.this, StartFBActivity.class);
-                    intent.putExtra("nameFB",nameFB);
-                    intent.putExtra("imageFB",imageFB);
-                    startActivity(intent);
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        // We set parameters to the GraphRequest using a Bundle.
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,picture.width(200)");
-        request.setParameters(parameters);
-        // Initiate the GraphRequest
-        request.executeAsync();
-    }
 
 
 
