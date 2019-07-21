@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name" translatable="false">TochkaTest</string>
+    <string name="exit" translatable="false">Выйти</string>
+    <integer name="com_vk_sdk_AppId">7064299</integer>
+
+    <string name="change_account" translatable="false">Change account</string>
+    <string name="name" translatable="false">Boris Petrovich</string>
+    <string name="nav_open_drawer" translatable="false">Open navigation drawer</string>
+    <string name="nav_close_drawer" translatable="false">Close navigation drawer</string>
+    <string name="list_git_users" translatable="false">To show GitHub\'s Users</string>
+    <string name="git_url" translatable="false">https://api.github.com/users/mojombo</string>
+    <string name="search_hint" translatable="false">Search</string>
+    <string name="resultNotFound" translatable="false">результаты не найдены</string>
+    <string name="EnterVk" translatable="false">Войти через ВК</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="facebook_app_id">345696503044848</string>
+    <string name="fb_login_protocol_scheme">fb345696503044848</string>
+
+
+
+</resources>
