@@ -14,10 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         >
-        <activity android:name=".StartActivity"></activity>
+
+        <activity
+            android:name=".view.StartActivity"
+            android:screenOrientation="portrait" />
 
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
