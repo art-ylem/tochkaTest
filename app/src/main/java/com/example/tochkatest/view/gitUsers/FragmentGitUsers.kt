@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 
 import com.example.tochkatest.R
@@ -68,7 +69,8 @@ class FragmentGitUsers : Fragment(), FragmentGitUsersView {
 
     override fun recyclerError() {
         Log.e("TAG", "recyclerError: haha"  )
-        not_found_connection.visibility = View.VISIBLE
+//        not_found_connection.visibility = View.VISIBLE
+        Toast.makeText(context, "Нет соединения!", Toast.LENGTH_SHORT).show()
     }
 
     override fun recyclerUsers(arr: ArrayList<GitUsers>) {
