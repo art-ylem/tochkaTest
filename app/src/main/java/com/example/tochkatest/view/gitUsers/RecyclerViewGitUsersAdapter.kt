@@ -40,11 +40,11 @@ class RecyclerViewGitUsersAdapter(private val context: Context?, private var rDa
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.git_name.text = setTextString(rData!![position].login)
-        holder.git_url.text = setTextString(rData!![position].url)
-        Picasso.with(context).load(rData!![position].avatar_url).into(holder.git_img)
+        holder.gitName.text = setTextString(rData!![position].login)
+        holder.gitUrl.text = setTextString(rData!![position].url)
+        Picasso.with(context).load(rData!![position].avatar_url).into(holder.gitImg)
 
-        holder.git_url.setOnClickListener { context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(rData!![position].avatar_url))) }
+        holder.itemView.setOnClickListener { context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(rData!![position].avatar_url))) }
 
         if (position > 25 && position == rData!!.size - 1) {
             Log.e("TAG", "limit 30: ")
@@ -70,14 +70,8 @@ class RecyclerViewGitUsersAdapter(private val context: Context?, private var rDa
 
 
     inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val git_name: TextView
-        val git_url: TextView
-        val git_img: CircleImageView
-
-        init {
-            git_name = itemView.findViewById(R.id.git_name)
-            git_url = itemView.findViewById(R.id.git_url)
-            git_img = itemView.findViewById(R.id.git_img)
-        }
+        val gitName: TextView = itemView.findViewById(R.id.git_name)
+        val gitUrl: TextView = itemView.findViewById(R.id.git_url)
+        val gitImg: CircleImageView = itemView.findViewById(R.id.git_img)
     }
 }

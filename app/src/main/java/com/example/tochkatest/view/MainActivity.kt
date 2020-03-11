@@ -35,11 +35,11 @@ class MainActivity : AppCompatActivity() {
 
         //vk
         val vkImg = findViewById<Button>(R.id.vk)
-        vkImg.setOnClickListener { v -> vkUseCase!!.checkAuth() }
+        vkImg.setOnClickListener { vkUseCase!!.checkAuth() }
 
         //google
         val googleImg = findViewById<SignInButton>(R.id.gl)
-        googleImg.setOnClickListener { v -> googleUseCase!!.signIn(this) }
+        googleImg.setOnClickListener { googleUseCase!!.signIn(this) }
 
         //fb
         val fbBtn = findViewById<LoginButton>(R.id.fb)

@@ -3,46 +3,37 @@ package com.example.tochkatest.view.gitUsers
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 
-import android.os.Handler
-import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.TextView
 
 import com.example.tochkatest.R
 import com.example.tochkatest.model.git.GitUsers
-import com.example.tochkatest.model.git.InputData
 import com.example.tochkatest.presenter.FragmentGitUsersPresenter
 
-import java.util.ArrayList
 import java.util.concurrent.TimeUnit
-
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.git_users_fragment.*
 
 
 class FragmentGitUsers : Fragment(), FragmentGitUsersView {
 
     private var recyclerViewGitUsersAdapter: RecyclerViewGitUsersAdapter? = null
-    private var recyclerView: RecyclerView? = null
     private var fragmentGitUsersPresenter: FragmentGitUsersPresenter? = null
     private val arrayList = ArrayList<GitUsers>()
     private val compositeDisposable = CompositeDisposable()
-    private var searchView: SearchView? = null
-    private var notFound: TextView? = null
+
 
     internal var inputObservable = Observable.create<String> { emitter ->
 
-        searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(query: String): Boolean {
                 return false
@@ -64,18 +55,13 @@ class FragmentGitUsers : Fragment(), FragmentGitUsersView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = view.findViewById(R.id.recycler_view_git_users)
         recyclerViewGitUsersAdapter = RecyclerViewGitUsersAdapter(context, arrayList)
-        recyclerView!!.adapter = recyclerViewGitUsersAdapter
+        recycler_view_git_users.adapter = recyclerViewGitUsersAdapter
         fragmentGitUsersPresenter = FragmentGitUsersPresenter(this)
         fragmentGitUsersPresenter!!.loadData("0")
 
-        searchView = view.findViewById(R.id.searchView)
-        notFound = view.findViewById(R.id.notFoundResults)
-
         searchView!!.queryHint = resources.getString(R.string.search_hint)
         initAdapter()
-
     }
 
 
@@ -107,7 +93,13 @@ class FragmentGitUsers : Fragment(), FragmentGitUsersView {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .debounce(600, TimeUnit.MILLISECONDS)
-                .doOnNext { text -> if (!TextUtils.isEmpty(text) && text !== " ") fragmentGitUsersPresenter!!.loadSearchData(text.toLowerCase()) }
+                .doOnNext { text ->
+                    if (!TextUtils.isEmpty(text) && text != " "){
+                        fragmentGitUsersPresenter!!.loadSearchData(text.toLowerCase())
+                    }else{
+                        fragmentGitUsersPresenter!!.loadData("0")
+                    }
+                }
                 .subscribe()
 
         compositeDisposable.add(disposable2)
@@ -115,7 +107,7 @@ class FragmentGitUsers : Fragment(), FragmentGitUsersView {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDisposable?.dispose()
+        compositeDisposable.dispose()
     }
 
     companion object {

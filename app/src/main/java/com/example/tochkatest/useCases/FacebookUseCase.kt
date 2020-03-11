@@ -33,7 +33,7 @@ class FacebookUseCase(private val mainActivity: MainActivity) {
          * 1st Param - AccessToken
          * 2nd Param - Callback (which will be invoked once the request is successful)
          */
-        val request = GraphRequest.newMeRequest(accessToken) { `object`, response ->
+        val request = GraphRequest.newMeRequest(accessToken) { `object`, _ ->
             //OnCompleted is invoked once the GraphRequest is successful
             try {
 

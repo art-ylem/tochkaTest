@@ -17,17 +17,17 @@ class GitService private constructor() {
         get() = mRetrofit.create(Api::class.java)
 
     init {
-        val interceptor = HttpLoggingInterceptor()//чтобы писалось в лог
+        val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-        val client = OkHttpClient.Builder()//связывает с интернетом
+        val client = OkHttpClient.Builder()
         client.addInterceptor(interceptor)
 
         mRetrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())//из json в объект
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//для работы rx
-                .client(client.build())//сборка и запуск
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//rx
+                .client(client.build())
                 .build()
     }
 

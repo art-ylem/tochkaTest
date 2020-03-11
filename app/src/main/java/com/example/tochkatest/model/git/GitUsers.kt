@@ -1,7 +1,5 @@
 package com.example.tochkatest.model.git;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 data class GitUsers(
         val avatar_url: String,

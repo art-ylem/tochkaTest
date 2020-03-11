@@ -1,6 +1,5 @@
 package com.example.tochkatest.view
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -10,25 +9,21 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 
 import android.view.MenuItem
-import android.widget.TextView
 import com.example.tochkatest.R
-import com.example.tochkatest.model.User
 
 import com.example.tochkatest.view.gitUsers.FragmentGitUsers
 import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
 
-import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.activity_start.*
+import kotlinx.android.synthetic.main.nav_header.*
 
 class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private var drawerLayout: DrawerLayout? = null
     private var toolbar: Toolbar? = null
     private var toggle: ActionBarDrawerToggle? = null
-    private var navigationView: NavigationView? = null
-    private var name: TextView? = null
-    private var img: CircleImageView? = null
-    private var user: User? = null
+//    private var user: User? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,13 +31,12 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         setContentView(R.layout.activity_start)
 
         init()
-        user = intent.getSerializableExtra("USER") as User
-        name!!.text = user!!.name
-        Picasso.with(this).load(user!!.url).into(img)
+//        user = intent.getSerializableExtra("USER") as User
+//        account_name.text = "Artem Sidorov"
+//        Picasso.with(this).load(R.drawable.ic_person_black_24dp).into(account_img)
     }
 
     private fun init() {
-
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
@@ -54,20 +48,13 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         drawerLayout!!.addDrawerListener(toggle!!)
         toggle!!.syncState()
 
-        navigationView = findViewById(R.id.nav_view)
-        navigationView!!.setNavigationItemSelectedListener(this)
-
-        val headerView = navigationView!!.getHeaderView(0)
-        name = headerView.findViewById(R.id.account_name)
-        img = headerView.findViewById(R.id.account_img)
-
+        nav_view.setNavigationItemSelectedListener(this)
         launchFragment(FragmentGitUsers.newInstance())
-
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.changeAccount -> startActivity(Intent(this@StartActivity, MainActivity::class.java))
+//            R.id.changeAccount -> startActivity(Intent(this@StartActivity, MainActivity::class.java))
             R.id.list_git_users -> launchFragment(FragmentGitUsers.newInstance())
 
             else -> return true
@@ -88,7 +75,6 @@ class StartActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.container_frame, fragment)
         fragmentTransaction.commit()
-
     }
 
 }
