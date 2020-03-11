@@ -8,5 +8,6 @@ import java.util.ArrayList
 interface FragmentGitUsersView {
     fun recyclerUsers(arr: ArrayList<GitUsers>)
     fun recyclerInputUsers(arr: ArrayList<GitUsers>)
+    fun recyclerError()
 
 }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.annotation.VisibleForTesting
 
 import com.example.tochkatest.R
 import com.example.tochkatest.model.git.GitUsers
@@ -24,6 +25,7 @@ import kotlinx.android.synthetic.main.git_users_fragment.*
 
 
 class FragmentGitUsers : Fragment(), FragmentGitUsersView {
+
 
     private var recyclerViewGitUsersAdapter: RecyclerViewGitUsersAdapter? = null
     private var fragmentGitUsersPresenter: FragmentGitUsersPresenter? = null
@@ -64,11 +66,15 @@ class FragmentGitUsers : Fragment(), FragmentGitUsersView {
         initAdapter()
     }
 
+    override fun recyclerError() {
+        Log.e("TAG", "recyclerError: haha"  )
+        not_found_connection.visibility = View.VISIBLE
+    }
 
     override fun recyclerUsers(arr: ArrayList<GitUsers>) {
         Log.e("TAG", "recyclerUsers: ")
         arrayList.addAll(arr)
-
+        not_found_connection.visibility = View.INVISIBLE
         recyclerViewGitUsersAdapter!!.updateList(arrayList)
     }
 
@@ -76,7 +82,7 @@ class FragmentGitUsers : Fragment(), FragmentGitUsersView {
         Log.e("TAG", "recyclerInputUsers: ")
         val arrList = ArrayList<GitUsers>()
         arrList.addAll(arr)
-
+        not_found_connection.visibility = View.INVISIBLE
         recyclerViewGitUsersAdapter!!.updateList(arrList)
     }
 
